@@ -3,7 +3,8 @@
 define [
   'select2/src/js/jquery.select2'
   'select2/src/js/select2/i18n/pt-BR'
-], (Select2, Utils) ->
+  'helpers/format'
+], (Select2, Utils, format) ->
 
   $.fn.select2.defaults
     .defaults.amdBase = 'select2/src/js/select2/'
@@ -24,7 +25,10 @@ define [
         page: params.page
       processResults: (data, params) ->
         params.page = params.page || 1
-        results: data.items
+        items = data.items.map (o) ->
+          o.fullNameFmt = format(o.full_name, params.term)
+          o
+        results: items
         pagination:
           more: (params.page * 30) < data.total_count
       cache: true
@@ -32,11 +36,10 @@ define [
     escapeMarkup: (content) ->
       content
     templateResult: (repo) ->
-      console.log repo
       if repo.loading
         return repo.text
       """
-      <div><b>#{repo.full_name}</b> <i>#{repo.stargazers_count}</i></div>
+      <div>#{repo.fullNameFmt} <i>#{repo.stargazers_count}</i></div>
       """
     templateSelection: (repo) ->
       repo.full_name || repo.text

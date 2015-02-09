@@ -2,6 +2,6 @@
   "name": "projeto",
   "version": "0.0.1",
   "dependencies": {
-    "select2": "select2/select2#7a8500f198"
+    "select2": "select2/select2#b1c016584b"
   }
 }
